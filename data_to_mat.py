@@ -7,6 +7,8 @@ from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import PointCloud2
 import sensor_msgs.point_cloud2
 from std_msgs.msg import Empty
+import rosbag
+import subprocess
 
 # global variables to append to for every call of callbacks
 x = []
@@ -15,6 +17,9 @@ h = []
 scans = []
 laser_scan_subscriber = None
 timer = None
+
+rosbag_directory = "../Sample-Data/Sample-Data.bag"
+command = "rosbag play " + rosbag_directory + " --topics /pose_ground_truth /pointcloud_map"
 
 # subscribe to topics for pose and scan
 # save info to dictionary with robotPose and laserScan
@@ -35,8 +40,10 @@ def laser_scan_callback(msg):
     scans.append(packets)
 
 
-def filtered_pose_callback(msg): 
+def filtered_pose_callback(msg):
     print("Reading pose")
+    print(rospy.get_time())
+
     # x and y
     x.append(msg.pose.position.x)
     y.append(msg.pose.position.y)
@@ -54,13 +61,16 @@ def filtered_pose_callback(msg):
     # extract yaw
     h.append(eulXYZ[2])
 
+
 # finished, save to .mat file
-def quit_func(message):
+def quit_func(event):
     # shut down timer
-    timer.shutdown()
-    
+    print("Shut down")
+
+    rospy.signal_shutdown("All data has been processed.")
+
     # unsunscribe from topics
-    laser_scan_subscriber.unregister()
+    # TODO: laser_scan_subscriber.unregister()
 
     # write poses and scans to mat file
     data = {"robotPose": {"x": x, "y": y, "h": h}, "laserScan": scans}
@@ -81,16 +91,20 @@ def main():
     filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
     laser_scan_subscriber = rospy.Subscriber('/pointcloud_map', PointCloud2, laser_scan_callback) 
 
-    timer = rospy.Timer(rospy.Duration(secs=5), quit_func)
-    #
+    bag = rosbag.Bag('../Sample-Data/Sample-Data.bag', 'r')
+    duration = bag.get_end_time() - bag.get_start_time()
+    bag.close()
+
+    print(duration)
+
+    # calculate time remaining until rosbag finishes playing
+    time_elapsed = rospy.get_time() - rospy.Time.now().to_sec()
+    remaining_time = duration - time_elapsed
+    timer = rospy.Timer(rospy.Duration(secs=remaining_time), quit_func)
 
     # do not exit until node is stopped
+    subprocess.check_output(command, shell=True)
     rospy.spin()
-    #try:
-    #    rospy.spin()
-    #except KeyboardInterrupt:
-    #    quit_func()
-
 
 if __name__ == '__main__':
     main()
