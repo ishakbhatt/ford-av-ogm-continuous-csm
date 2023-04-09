@@ -57,9 +57,6 @@ def main():
     plot_semantic(ogm, 'Continuous S-CSM Mean', 'ogm_intel_continuous_S_CSM_mean.png')
     plot_variance(ogm, 'Continuous S-CSM Variance (grid size = 0.135)', 'ogm_intel_continuous_S_CSM_variance_grid_0135.png')
 
-    else:
-        print('wrong input of task_num')
-
 
 if __name__ == '__main__':
     main()

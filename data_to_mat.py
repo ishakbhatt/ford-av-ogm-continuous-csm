@@ -18,7 +18,8 @@ scans = []
 laser_scan_subscriber = None
 timer = None
 
-rosbag_directory = "../Sample-Data/Sample-Data.bag"
+data_directory = "/mnt/c/Users/ibhat/repo/grad_school/rob530/ford-av-ogm-continuous-csm/data"
+rosbag_directory = "/mnt/c/Users/ibhat/repo/grad_school/rosbags/Sample-Data.bag"
 command = "rosbag play " + rosbag_directory + " --topics /pose_ground_truth /pointcloud_map"
 
 # subscribe to topics for pose and scan
@@ -69,12 +70,14 @@ def quit_func(event):
 
     rospy.signal_shutdown("All data has been processed.")
 
-    # unsunscribe from topics
-    # TODO: laser_scan_subscriber.unregister()
-
     # write poses and scans to mat file
-    data = {"robotPose": {"x": x, "y": y, "h": h}, "laserScan": scans}
-    savemat(os.path.join('data','fordAV.mat'), data)
+    #laserScans = np.array(scans)
+    data = {"robotPose": {"x": x, "y": y, "h": h}, "laserScan": {"scans": scans}}
+    savemat(os.path.join(data_directory,'fordAV.mat'), data)
+
+    #print(scans)
+    #data2 = {"laserScan": scans}
+    #savemat(os.path.join(data_directory,'fordAV2.mat'), data2)
 
     # finished message
     print("Finished.")
@@ -91,7 +94,7 @@ def main():
     filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
     laser_scan_subscriber = rospy.Subscriber('/pointcloud_map', PointCloud2, laser_scan_callback) 
 
-    bag = rosbag.Bag('../Sample-Data/Sample-Data.bag', 'r')
+    bag = rosbag.Bag(rosbag_directory, 'r')
     duration = bag.get_end_time() - bag.get_start_time()
     bag.close()
 
