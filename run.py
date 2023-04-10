@@ -1,11 +1,12 @@
 import rospy
+import pickle
 import sys
 import argparse
 import numpy as np
 from scipy.io import loadmat
 import os
 from utils import plot_mean, plot_variance, plot_semantic
-from ogm_continuous_S_CSM import ogm_continuous_S_CSM
+from ogm_continuous_CSM import ogm_continuous_CSM
 from scipy.spatial.transform import Rotation as R
 
 
@@ -41,9 +42,13 @@ def main():
 
     # load data
     dataLoad = loadmat(os.path.join('data','fordAV.mat'))
+    with open(os.path.join('data', 'laserScan.pkl'), 'rb') as f:
+        scans = pickle.load(f)
 
     robotPose = dataLoad['robotPose']
-    laserScan = dataLoad['laserScan']  
+    laserScan = scans
+
+    print(len(laserScan))
 
 
     # continuous S-CSM
