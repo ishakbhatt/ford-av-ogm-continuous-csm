@@ -42,11 +42,11 @@ def main():
 
     # load data
     dataLoad = loadmat(os.path.join('data','fordAV.mat'))
-    with open(os.path.join('data', 'laserScan.pkl'), 'rb') as f:
-        scans = pickle.load(f)
+    # with open(os.path.join('data', 'laserScan.pkl'), 'rb') as f:
+    #     scans = pickle.load(f)
 
     robotPose = dataLoad['robotPose']
-    laserScan = scans
+    # laserScan = scans
 
     print(len(laserScan))
 
