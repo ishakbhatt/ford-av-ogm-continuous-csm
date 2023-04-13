@@ -23,7 +23,7 @@ class ogm_continuous_CSM:
 
         # grid map parameters
         self.grid_size = 0.1  # adjust this for task 2.B
-        self.nn = 16            # number of nearest neighbor search
+        self.nn = 16          # number of nearest neighbor search
 
         # map structure
         self.map = {}   # map
