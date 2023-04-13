@@ -2,6 +2,8 @@ import velodyne_decoder as vd
 import numpy as np
 import os
 import pickle
+import matplotlib.pyplot as plt
+
 
 config = vd.Config(model='VLP-32C', gps_time=True)
 bagfile = '/home/coned/data/Sample-Data.bag'
@@ -10,8 +12,26 @@ lidar_topics = ['/lidar_blue_scan', '/lidar_green_scan', '/lidar_red_scan', '/li
 cloud_arrays = {}
 for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
     # print(points.shape)
-    indices = np.where(np.logical_and(points[:,2] >= -2, points[:,2] <= 2))
+    indices = np.where(np.logical_and(points[:,3] >= 70. ,np.logical_and(points[:,2] >= -2, points[:,2] <= 2)))
     points = points[indices]
+
+    # data = points[:, 3]
+    # mean = np.mean(data)
+    # variance = np.var(data)
+    # # Compute the histogram of the data using NumPy
+    # hist, bin_edges = np.histogram(data, bins=10)
+
+    # # Create a histogram plot of the data using Matplotlib
+    # plt.hist(data, bins=10)
+    # plt.title("Histogram of Data")
+    # plt.xlabel("Value")
+    # plt.ylabel("Frequency")
+
+    # # Add frequency counts as text annotations on the plot
+    # for i in range(len(hist)):
+    #     plt.text(bin_edges[i], hist[i], str(hist[i]), ha='center', va='bottom')
+
+    # plt.show()
 
     # Check if the 'stamp' key exists in cloud_arrays
     if stamp in cloud_arrays:
