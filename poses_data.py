@@ -50,7 +50,7 @@ def filtered_pose_callback(msg):
         # Create a new key-value pair in the dictionary
         poses[stamp] = [pose]
 
-
+ 
 # finished, save to .mat file
 def quit_func(event):
     # shut down timer

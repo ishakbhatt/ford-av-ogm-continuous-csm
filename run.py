@@ -40,19 +40,15 @@ def main():
     #filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
     #laser_scan_subscriber = rospy.Subscriber('/lidar_red_scan', VelodyneScan, laser_scan_callback) 
 
-    # load data
-    dataLoad = loadmat(os.path.join('data','fordAV.mat'))
-    # with open(os.path.join('data', 'laserScan.pkl'), 'rb') as f:
-    #     scans = pickle.load(f)
+    data_directory = "/home/coned/data/"
+    with open(os.path.join(data_directory, "data_aligned.pkl"), "rb") as f:
+        data_aligned = pickle.load(f)
 
-    robotPose = dataLoad['robotPose']
-    # laserScan = scans
-
-    print(len(laserScan))
-
+    robotPose = data_aligned['robotPose']
+    laserScan = data_aligned['laserScan']
 
     # continuous S-CSM
-    ogm = ogm_continuous_CSM()
+    ogm = ogm_continuous_CSM()````
         
     # build map
     ogm.construct_map(robotPose, laserScan)

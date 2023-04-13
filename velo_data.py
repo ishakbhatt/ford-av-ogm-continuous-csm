@@ -16,7 +16,7 @@ for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
         # Create a new key-value pair in the dictionary
         cloud_arrays[stamp] = [points]
 
-data_directory = "/home/coned/data/"
-with open(os.path.join(data_directory, "laserScan.pkl"), "wb") as f:
-        pickle.dump(cloud_arrays, f)
+# data_directory = "/home/coned/data/"
+# with open(os.path.join(data_directory, "laserScan.pkl"), "wb") as f:
+#         pickle.dump(cloud_arrays, f)
 
