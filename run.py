@@ -40,7 +40,7 @@ def main():
     #filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
     #laser_scan_subscriber = rospy.Subscriber('/lidar_red_scan', VelodyneScan, laser_scan_callback) 
 
-    data_directory = "/home/coned/data/"
+    data_directory = "./data/"
     with open(os.path.join(data_directory, "data_aligned.pkl"), "rb") as f:
         data_aligned = pickle.load(f)
 
@@ -48,15 +48,15 @@ def main():
     laserScan = data_aligned['laserScan']
 
     # continuous S-CSM
-    ogm = ogm_continuous_CSM()````
+    ogm = ogm_continuous_CSM()
         
     # build map
     ogm.construct_map(robotPose, laserScan)
     ogm.build_ogm()
 
     # plot
-    plot_semantic(ogm, 'Continuous S-CSM Mean', 'ogm_intel_continuous_S_CSM_mean.png')
-    plot_variance(ogm, 'Continuous S-CSM Variance (grid size = 0.135)', 'ogm_intel_continuous_S_CSM_variance_grid_0135.png')
+    plot_mean(ogm, 'CSM Mean', 'ogm_intel_CSM_mean.png')
+    plot_variance(ogm, 'CSM Variance', 'ogm_intel_CSM_variance.png')
 
 
 if __name__ == '__main__':

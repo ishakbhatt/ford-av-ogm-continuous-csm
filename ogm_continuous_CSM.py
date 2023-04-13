@@ -14,15 +14,15 @@ class ogm_continuous_CSM:
 
     def __init__(self):
         # map dimensions
-        self.range_x = [-15, 20]
-        self.range_y = [-25, 10]
+        self.range_x = [1000, 1500]
+        self.range_y = [-2000, -1500]
 
         # senesor parameters
-        self.z_max = 30     # max range in meters
+        self.z_max = 200     # max range in meters
         self.n_beams = 133  # number of beams, we set it to 133 because not all measurements in the dataset contains 180 beams 
 
         # grid map parameters
-        self.grid_size = 0.5  # adjust this for task 2.B
+        self.grid_size = 10  # adjust this for task 2.B
         self.nn = 16            # number of nearest neighbor search
 
         # map structure
@@ -142,6 +142,7 @@ class ogm_continuous_CSM:
         # for each pose which should be the case in online (incremental)
         # data processing.
         for i in tqdm(range(self.map['size'])):
+        #for i in range(self.map['size']):
             m = self.map['occMap'].data[i, :]
             _, idxs = self.pose['mdl'].query(m, self.nn)
             if len(idxs):
