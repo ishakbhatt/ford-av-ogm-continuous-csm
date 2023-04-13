@@ -23,11 +23,11 @@ for i in range(len(data["laserScan"])):
     min_x = min(min_x, local_min_x)
     min_y = min(min_y, local_min_y)
 
-print(max_x, max_y, min_x, min_y)
+print(min_x, max_x, min_y, max_y)
 
 max_pose_x = max(data["robotPose"]["x"][0][0])
 max_pose_y = max(data["robotPose"]["y"][0][0])
 min_pose_x = min(data["robotPose"]["x"][0][0])
 min_pose_y = min(data["robotPose"]["y"][0][0])
 
-print(max_pose_x, max_pose_y, min_pose_x, min_pose_y)
+print(min_pose_x, max_pose_x, min_pose_y, max_pose_y)

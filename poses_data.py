@@ -18,7 +18,7 @@ import struct
 laser_scan_subscriber = None
 timer = None
 
-data_directory = "/home/coned/data/"
+data_directory = "./data/"
 rosbag_directory = "/home/coned/data/Sample-Data.bag"
 rosbag_play = "rosbag play " + rosbag_directory
 

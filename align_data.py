@@ -29,7 +29,7 @@ def find_closest_timestamp(target_time, timestamps):
 cloud_arrays = None
 poses = None
 
-data_directory = "/home/coned/data/"
+data_directory = "./data/"
 with open(os.path.join(data_directory, "laserScan.pkl"), "rb") as f:
     cloud_arrays = pickle.load(f)
 

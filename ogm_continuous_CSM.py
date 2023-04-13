@@ -14,15 +14,15 @@ class ogm_continuous_CSM:
 
     def __init__(self):
         # map dimensions
-        self.range_x = [1000, 1500]
-        self.range_y = [-2000, -1500]
+        self.range_x = [1100, 1400]
+        self.range_y = [-1900, -1600]
 
         # senesor parameters
         self.z_max = 200     # max range in meters
         self.n_beams = 133  # number of beams, we set it to 133 because not all measurements in the dataset contains 180 beams 
 
         # grid map parameters
-        self.grid_size = 10  # adjust this for task 2.B
+        self.grid_size = 1  # adjust this for task 2.B
         self.nn = 16            # number of nearest neighbor search
 
         # map structure
