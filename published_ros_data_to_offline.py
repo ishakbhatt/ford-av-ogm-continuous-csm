@@ -92,7 +92,7 @@ def main():
     # subscribe for pose and scans
     print("Initializing pose and laser scan subscribers...")
     filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
-    laser_scan_subscriber = rospy.Subscriber('/pointcloud_map', PointCloud2, laser_scan_callback) 
+    # laser_scan_subscriber = rospy.Subscriber('/pointcloud_map', PointCloud2, laser_scan_callback) 
 
     # compute duration of playing bag
     bag = rosbag.Bag(rosbag_directory, 'r')

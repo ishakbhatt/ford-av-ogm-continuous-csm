@@ -11,14 +11,10 @@ from std_msgs.msg import Empty
 import rosbag
 import subprocess
 from velodyne_msgs.msg import VelodyneScan, VelodynePacket
-from pyvelo.velodyne import VelodyneDecoder
+import struct
 
 
 # global variables to append to for every call of callbacks
-x = []
-y = []
-h = []
-scans = []
 laser_scan_subscriber = None
 timer = None
 
@@ -26,40 +22,12 @@ data_directory = "/home/coned/data/"
 rosbag_directory = "/home/coned/data/Sample-Data.bag"
 rosbag_play = "rosbag play " + rosbag_directory
 
-# subscribe to topics for pose and scan
-# save info to global variables to save later to files
-def laser_scan_callback(msg):
-    print("Reading laser scan")
-    
-    # print(len(msg.packets))
 
-    for packet in msg.packets:
-        packet.deserialize_numpy(packet.data, np)
-        print(packet.data)
-        decoder = VelodyneDecoder()
-        points = decoder.decode(packet)
-
-    # # get x and y from point cloud message
-    # pt_x = []
-    # pt_y = []
-    # for point in sensor_msgs.point_cloud2.read_points(msg, skip_nans=True): # sensor_msgs.point_cloud2.
-    #     pt_x.append(point[0])
-    #     pt_y.append(point[1])
-    
-    # # reformat into packets similar to each
-    # # element of laserScan in original .mat file
-    # packets = np.vstack((pt_x, pt_y))
-
-    # # add scan to scans
-    # scans.append(packets)
-
+poses = {}
 
 def filtered_pose_callback(msg):
     # print("Reading pose")
-
-    # x and y
-    x.append(msg.pose.position.x)
-    y.append(msg.pose.position.y)
+    stamp = msg.header.stamp
 
     # quaternion angles to euler
     x_quat = msg.pose.orientation.x
@@ -71,8 +39,16 @@ def filtered_pose_callback(msg):
     r = R.from_quat([x_quat, y_quat, z_quat, w_quat])
     eulXYZ = r.as_euler('xyz')
 
-    # extract yaw
-    h.append(eulXYZ[2])
+
+    pose = [msg.pose.position.x, msg.pose.position.y, eulXYZ[2]] #x, y, h
+
+    if stamp in poses:
+        # Append the new points to the existing list
+        poses[stamp].extend(pose)
+        assert(False)
+    else:
+        # Create a new key-value pair in the dictionary
+        poses[stamp] = [pose]
 
 
 # finished, save to .mat file
@@ -83,13 +59,9 @@ def quit_func(event):
     # shutdown signal
     rospy.signal_shutdown("All data has been processed.")
 
-    # write robot poses to mat file
-    data = {"robotPose": {"x": x, "y": y, "h": h}}
-    savemat(os.path.join(data_directory,'fordAV.mat'), data)
-
-    # pickle the laser scans
-    with open(os.path.join(data_directory, "laserScan.pkl"), "wb") as f:
-        pickle.dump(scans, f)
+    # pickle
+    with open(os.path.join(data_directory, "poses.pkl"), "wb") as f:
+        pickle.dump(poses, f)
 
     # finished message
     print("Finished.")
@@ -104,7 +76,6 @@ def main():
     # subscribe for pose and scans
     print("Initializing pose and laser scan subscribers...")
     filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
-    laser_scan_subscriber = rospy.Subscriber('/lidar_blue_scan', VelodyneScan, laser_scan_callback)
 
     # compute duration of playing bag
     bag = rosbag.Bag(rosbag_directory, 'r')
