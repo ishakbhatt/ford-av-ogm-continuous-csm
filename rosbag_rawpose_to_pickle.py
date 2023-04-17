@@ -1,32 +1,33 @@
+# Script to convert raw pose from Rosbag to pickled poses
+#
+# Author: Isha Bhatt, Meghana Kowsika, Yipeng Lin, Yanjun Chen, Thirumalaesh Ashokkumar
+# Date: 04/19/2023
+
 import os
-import numpy as np
 import rospy
 import pickle
-from scipy.io import savemat
 from scipy.spatial.transform import Rotation as R
 from geometry_msgs.msg import PoseStamped
-from sensor_msgs.msg import PointCloud2
-import sensor_msgs.point_cloud2
-from std_msgs.msg import Empty
 import rosbag
 import subprocess
-from velodyne_msgs.msg import VelodyneScan, VelodynePacket
-import struct
 
+sys.path.append('.')
+import yaml
+with open("config/settings.yaml", 'r') as stream:
+    param = yaml.safe_load(stream)
 
-# global variables to append to for every call of callbacks
+# global variables to be used across functions and calls of callback
 laser_scan_subscriber = None
 timer = None
 
-data_directory = "./data/"
-rosbag_directory = "/home/coned/data/Sample-Data.bag"
+data_directory = param['data_directory']
+rosbag_directory = param['rosbag_directory']
 rosbag_play = "rosbag play " + rosbag_directory
-
 
 poses = {}
 
 def filtered_pose_callback(msg):
-    # print("Reading pose")
+    print("Reading pose")
     stamp = msg.header.stamp
 
     # quaternion angles to euler
@@ -39,13 +40,11 @@ def filtered_pose_callback(msg):
     r = R.from_quat([x_quat, y_quat, z_quat, w_quat])
     eulXYZ = r.as_euler('xyz')
 
-
     pose = [msg.pose.position.x, msg.pose.position.y, eulXYZ[2]] #x, y, h
 
     if stamp in poses:
         # Append the new points to the existing list
         poses[stamp].extend(pose)
-        assert(False)
     else:
         # Create a new key-value pair in the dictionary
         poses[stamp] = [pose]
@@ -75,7 +74,7 @@ def main():
 
     # subscribe for pose and scans
     print("Initializing pose and laser scan subscribers...")
-    filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
+    rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
 
     # compute duration of playing bag
     bag = rosbag.Bag(rosbag_directory, 'r')

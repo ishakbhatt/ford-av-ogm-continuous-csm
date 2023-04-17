@@ -135,7 +135,6 @@ class ogm_continuous_CSM:
 
 
 
-
     def build_ogm(self):
         # build occupancy grid map using the binary Bayes filter.
         # We first loop over all map cells, then for each cell, we find

@@ -1,46 +1,20 @@
-import rospy
+# Main script to construct map
+#
+# Author: Isha Bhatt, Meghana Kowsika, Yipeng Lin, Yanjun Chen, Thirumalaesh Ashokkumar
+# Date: 04/19/2023
+
 import pickle
-import sys
-import argparse
-import numpy as np
-from scipy.io import loadmat
 import os
-from utils import plot_mean, plot_variance, plot_semantic
+from utils import plot_mean, plot_variance
 from ogm_continuous_CSM import ogm_continuous_CSM
-from scipy.spatial.transform import Rotation as R
-
-
-# subscribe to topics for pose and scan
-# save info to dictionary with robotPose and laserScan
-'''def laser_scan_callback(msg):
-    header = msg.header
-    packets = msg.packets
-
-def filtered_pose_callback(msg): # 
-    # x and y
-    x = msg.pose.position.x
-    y = msg.pose.position.y
-
-    # quaternion angles to euler
-    x_quat = msg.pose.orientation.x
-    y_quat = msg.pose.orientation.y
-    z_quat = msg.pose.orientation.z
-    w_quat = msg.pose.orientation.w
-
-    # rotation
-    r = R.from_quat([x_quat, y_quat, z_quat, w_quat])
-    eulXYZ = r.as_euler('xyz')
-
-    # extract yaw
-    yaw = eulXYZ[2]'''
-
+sys.path.append('.')
+import yaml
+with open("config/settings.yaml", 'r') as stream:
+    param = yaml.safe_load(stream)
 
 def main():
-    # subscribe for pose and scans
-    #filtered_pose_subscriber = rospy.Subscriber('/pose_ground_truth', PoseStamped, filtered_pose_callback)
-    #laser_scan_subscriber = rospy.Subscriber('/lidar_red_scan', VelodyneScan, laser_scan_callback) 
 
-    data_directory = "./data/"
+    data_directory = param['data_directory']
     with open(os.path.join(data_directory, "data_aligned.pkl"), "rb") as f:
         data_aligned = pickle.load(f)
 

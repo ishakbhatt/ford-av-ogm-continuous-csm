@@ -1,13 +1,11 @@
+# Utility functions for Continuous Sensor Model
+#
+# Author: Chien Erh Lin, Fangtong Liu
+# Date: 02/27/2021
+
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-import matplotlib.colorbar as cbar
-from matplotlib.colors import Normalize
-from matplotlib import cm
-
-from matplotlib.colors import BoundaryNorm
-from matplotlib.ticker import MaxNLocator
-
 
 
 # This function is used to convert Cartesian to Polar
@@ -16,7 +14,6 @@ def cart2pol(x, y):
     theta = np.arctan2(y, x)
     z = np.hstack((r.reshape(-1, 1), theta.reshape(-1, 1)))
     return z
-
 
 # This function is used to wrap angles in radians to the interval [-pi, pi]
 # pi maps to pi and -pi maps to -pi
@@ -27,7 +24,6 @@ def wrapToPI(phase):
         x_wrap[idx] -= 2 * np.pi * np.sign(x_wrap[idx])
         idx = np.argwhere(np.abs(x_wrap) > np.pi)
     return x_wrap
-
 
 def plot_mean(ogm_map, figure_title, filename):
     print('Plotting map mean')
@@ -102,6 +98,7 @@ def plot_semantic(ogm_map, figure_title, filename):
                 color = color_semantic[semantic_class]  # map cell colors
         rect = Rectangle((x, y), ogm_map.grid_size, ogm_map.grid_size, facecolor=color, edgecolor='none')
         ax.add_patch(rect)
+
     ax.autoscale_view()
     ax.set_xlim(ogm_map.range_x)
     ax.set_ylim(ogm_map.range_y)
