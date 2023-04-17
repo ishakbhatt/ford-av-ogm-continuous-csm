@@ -14,17 +14,17 @@ class ogm_continuous_CSM:
 
     def __init__(self):
         # map dimensions
-        # self.range_x = [1250, 1350]
-        # self.range_y = [-1850, -1650]
-        self.range_x = [1300, 1350]
-        self.range_y = [-1720, -1670]
+        self.range_x = [1250, 1350]
+        self.range_y = [-1850, -1650]
+        # self.range_x = [1300, 1350]
+        # self.range_y = [-1720, -1670]
 
         # senesor parameters
         self.z_max = 200     # max range in meters
         self.n_beams = 133  # number of beams, we set it to 133 because not all measurements in the dataset contains 180 beams 
 
         # grid map parameters
-        self.grid_size = 0.4  # adjust this for task 2.B
+        self.grid_size = 0.5  # adjust this for task 2.B
         self.nn = 16          # number of nearest neighbor search
 
         # map structure
@@ -94,7 +94,7 @@ class ogm_continuous_CSM:
         # find the nearest beam
         bearing_diff = np.abs(wrapToPI(z[:, 1] - self.m_i['phi']))
         idx = np.nanargmin(bearing_diff)
-        global_x = self.pose['x'][k][0] + z[idx,0] * np.cos(z[idx,1] + self.pose['h'][k][0])
+        global_x = self.pose['x'][k][0] +z[idx,0] * np.cos(z[idx,1] + self.pose['h'][k][0])
         global_y = self.pose['y'][k][0] + z[idx,0] * np.sin(z[idx,1] + self.pose['h'][k][0])
 
         # -----------------------------------------------
