@@ -5,7 +5,7 @@ import pickle
 import matplotlib.pyplot as plt
 
 
-config = vd.Config(model='VLP-32C', gps_time=True)
+config = vd.Config(model='HDL-32E', gps_time=True)
 bagfile = '/home/coned/data/Sample-Data.bag'
 lidar_topics = ['/lidar_blue_scan', '/lidar_green_scan', '/lidar_red_scan', '/lidar_yellow_scan']
 
@@ -66,6 +66,17 @@ for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
         cloud_arrays[stamp] = [points]
 
 
+fig = plt.figure()
+    ax = fig.add_subplot(111, projection="3d")
+    scatter = ax.scatter(x[idx], y[idx], z[idx], c=intensity[idx], cmap='viridis')
+    ax.set_xlabel('X Label')
+    ax.set_ylabel('Y Label')
+    ax.set_zlabel('Z Label')
+
+    cbar = plt.colorbar(scatter)
+    cbar.set_label('Ring')
+
+cloud_arrays.keys()[0]
 
 data_directory = "./data/"
 with open(os.path.join(data_directory, "laserScan.pkl"), "wb") as f:
