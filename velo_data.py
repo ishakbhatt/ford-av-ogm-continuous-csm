@@ -3,11 +3,12 @@ import numpy as np
 import os
 import pickle
 import matplotlib.pyplot as plt
-
+from mpl_toolkits.mplot3d import Axes3D
 
 config = vd.Config(model='HDL-32E', gps_time=True)
 bagfile = '/home/coned/data/Sample-Data.bag'
-lidar_topics = ['/lidar_blue_scan', '/lidar_green_scan', '/lidar_red_scan', '/lidar_yellow_scan']
+# lidar_topics = ['/lidar_blue_scan', '/lidar_green_scan', '/lidar_red_scan', '/lidar_yellow_scan']
+lidar_topics = ['/lidar_red_scan']
 
 cloud_arrays = {}
 for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
@@ -54,6 +55,23 @@ for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
 
     # # ax.set_xlim([-1, 1])
     # # ax.set_ylim([-1, 1])
+
+    # x = points[:, 0]
+    # y = points[:, 1]
+    # z = points[:, 2]
+    # intensity = points[:, 3]
+
+    # n_points = 2000
+    # idx = np.random.choice(len(x), size=n_points, replace=False)
+
+    # fig = plt.figure()
+    # plt.title = topic
+    # ax = fig.add_subplot(111, projection="3d")
+    # scatter = ax.scatter(x[idx], y[idx], z[idx], c=intensity[idx], cmap='viridis')
+    # ax.set_xlabel('X Label')
+    # ax.set_ylabel('Y Label')
+    # ax.set_zlabel('Z Label')
+
 
     # # # show the plot
     # plt.show()
