@@ -14,7 +14,7 @@ cloud_arrays = {}
 for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
     # print(points.shape)
     # indices = np.where(np.logical_and(points[:,3] >= 70. ,np.logical_and(points[:,2] >= -2, points[:,2] <= 2)))
-    indices = np.where(np.logical_and(points[:,2] >= -1, points[:,2] <= 1))
+    indices = np.where(np.logical_and(points[:,2] >= -1, points[:,2] <= 0))
     points = points[indices]
 
     # data = points[:, 3]
@@ -40,8 +40,9 @@ for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
     # z = points[:, 2]
     # intensity = points[:, 4]
 
-    # n_points = 1000  # Number of points to plot
-    # idx = np.random.choice(len(x), size=n_points, replace=False)
+    n_points = 2000  # Number of points to plot
+    idx = np.random.choice(len(points), size=n_points, replace=False)
+    points = points[idx]
 
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection="3d")
