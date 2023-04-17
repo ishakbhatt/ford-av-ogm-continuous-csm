@@ -12,7 +12,8 @@ lidar_topics = ['/lidar_blue_scan', '/lidar_green_scan', '/lidar_red_scan', '/li
 cloud_arrays = {}
 for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
     # print(points.shape)
-    indices = np.where(np.logical_and(points[:,3] >= 70. ,np.logical_and(points[:,2] >= -2, points[:,2] <= 2)))
+    # indices = np.where(np.logical_and(points[:,3] >= 70. ,np.logical_and(points[:,2] >= -2, points[:,2] <= 2)))
+    indices = np.where(np.logical_and(points[:,2] >= -1, points[:,2] <= 1))
     points = points[indices]
 
     # data = points[:, 3]
@@ -33,29 +34,29 @@ for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
 
     # plt.show()
 
-    x = points[:, 0]
-    y = points[:, 1]
-    z = points[:, 2]
-    intensity = points[:, 4]
+    # x = points[:, 0]
+    # y = points[:, 1]
+    # z = points[:, 2]
+    # intensity = points[:, 4]
 
-    n_points = 1000  # Number of points to plot
-    idx = np.random.choice(len(x), size=n_points, replace=False)
+    # n_points = 1000  # Number of points to plot
+    # idx = np.random.choice(len(x), size=n_points, replace=False)
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
-    scatter = ax.scatter(x[idx], y[idx], z[idx], c=intensity[idx], cmap='viridis')
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection="3d")
+    # scatter = ax.scatter(x[idx], y[idx], z[idx], c=intensity[idx], cmap='viridis')
+    # ax.set_xlabel('X Label')
+    # ax.set_ylabel('Y Label')
+    # ax.set_zlabel('Z Label')
 
-    cbar = plt.colorbar(scatter)
-    cbar.set_label('Ring')
+    # cbar = plt.colorbar(scatter)
+    # cbar.set_label('Ring')
 
-    # ax.set_xlim([-1, 1])
-    # ax.set_ylim([-1, 1])
+    # # ax.set_xlim([-1, 1])
+    # # ax.set_ylim([-1, 1])
 
-    # # show the plot
-    plt.show()
+    # # # show the plot
+    # plt.show()
 
     # Check if the 'stamp' key exists in cloud_arrays
     if stamp in cloud_arrays:
@@ -65,18 +66,6 @@ for stamp, points, topic in vd.read_bag(bagfile, config, lidar_topics):
         # Create a new key-value pair in the dictionary
         cloud_arrays[stamp] = [points]
 
-
-fig = plt.figure()
-    ax = fig.add_subplot(111, projection="3d")
-    scatter = ax.scatter(x[idx], y[idx], z[idx], c=intensity[idx], cmap='viridis')
-    ax.set_xlabel('X Label')
-    ax.set_ylabel('Y Label')
-    ax.set_zlabel('Z Label')
-
-    cbar = plt.colorbar(scatter)
-    cbar.set_label('Ring')
-
-cloud_arrays.keys()[0]
 
 data_directory = "./data/"
 with open(os.path.join(data_directory, "laserScan.pkl"), "wb") as f:

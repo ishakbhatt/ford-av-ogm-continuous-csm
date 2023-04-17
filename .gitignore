@@ -1,2 +1,3 @@
 data/laserScan.pkl
 *.pyc
+data/*.pkl
