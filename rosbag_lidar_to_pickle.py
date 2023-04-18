@@ -2,7 +2,7 @@
 #
 # Author: Isha Bhatt, Meghana Kowsika, Yipeng Lin, Yanjun Chen, Thirumalaesh Ashokkumar
 # Date: 04/19/2023
-
+import sys
 import velodyne_decoder as vd
 import numpy as np
 import os
