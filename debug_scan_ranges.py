@@ -1,8 +1,17 @@
+# Debugging script to view point ranges for lidar scans
+#
+# Author: Isha Bhatt, Meghana Kowsika, Yipeng Lin, Yanjun Chen, Thirumalaesh Ashokkumar
+# Date: 04/19/2023
+import sys
 import pickle
 import os
-import numpy as np
+import sys
+sys.path.append('.')
+import yaml
 
-data_directory = "./data/"
+with open("config/settings.yaml", 'r') as stream:
+    param = yaml.safe_load(stream)
+data_directory = param['data_directory']
 
 with open(os.path.join(data_directory, "data_aligned.pkl"), "rb") as f:
     data = pickle.load(f)
@@ -17,7 +26,6 @@ for i in range(len(data["laserScan"])):
     local_max_y = max(data["laserScan"][i][0][1])
     local_min_x = min(data["laserScan"][i][0][0])
     local_min_y = min(data["laserScan"][i][0][1])
-    #print(local_max_x, local_max_y, local_min_x, local_min_y)
     max_x = max(max_x, local_max_x)
     max_y = max(max_y, local_max_y)
     min_x = min(min_x, local_min_x)
